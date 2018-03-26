@@ -1,5 +1,5 @@
 import Cocoa
-
+//From: https://stackoverflow.com/a/31782490 with modifications
 extension NSColor {
     convenience init(hexString: String) {
         var chars = Array(hexString.hasPrefix("#") ? hexString.dropFirst() : hexString[...])
@@ -34,10 +34,8 @@ extension NSColor {
     }
 }
 extension URL {
-    static func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let documentsDirectory = paths[0]
-        return documentsDirectory
+    static var documentsPath: URL {
+        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
 }
 extension NSBitmapImageRep {
@@ -47,10 +45,11 @@ extension NSBitmapImageRep {
         let data = representation(using: .png, properties: props)!
         do {
             let fileType = ".png"
-            try data.write(to: URL(string: "\(URL.getDocumentsDirectory())/x128/\(name)\(fileType)")!, options: Data.WritingOptions.atomic)
+            let path = "\(URL.documentsPath)/x128/\(name)\(fileType)"
+            try data.write(to: URL(string: path)!, options: Data.WritingOptions.atomic)
         }catch {
             print(error.localizedDescription)
-            print("!!! You need to create the folder 'x128' at \(URL.getDocumentsDirectory())x128/\(name) !!!")
+            print("!!! You need to create the folder 'x128' at \(URL.documentsPath)x128/\(name) !!!")
         }
     }
     
